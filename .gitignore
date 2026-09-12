@@ -1,4 +1,5 @@
 /config
+/lk_ics2_modbus
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
