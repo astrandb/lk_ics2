@@ -1,0 +1,17 @@
+{
+  "domain": "lk_ics2",
+  "name": "LK ICS.2",
+  "codeowners": [
+    "@astrandb"
+  ],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://www.home-assistant.io/integrations/lk_ics2",
+  "homekit": {},
+  "integration_type": "hub",
+  "iot_class": "local_polling",
+  "quality_scale": "bronze",
+  "requirements": [],
+  "ssdp": [],
+  "zeroconf": []
+}
