@@ -1,9 +1,7 @@
 {
   "domain": "lk_ics2",
   "name": "LK ICS.2",
-  "codeowners": [
-    "@astrandb"
-  ],
+  "codeowners": ["@astrandb"],
   "config_flow": true,
   "dependencies": [],
   "documentation": "https://www.home-assistant.io/integrations/lk_ics2",
@@ -13,5 +11,6 @@
   "quality_scale": "bronze",
   "requirements": [],
   "ssdp": [],
+  "version": "2026.9.0",
   "zeroconf": []
 }
