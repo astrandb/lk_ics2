@@ -1,5 +1,5 @@
 {
-  "name": "hass_cc_template",
+  "name": "lk_ics2",
   "domains": [
     "climate",
     "sensor",
@@ -10,6 +10,6 @@
     "Cloud Poll"
   ],
   "zip_release": true,
-  "filename": "hass_cc_template.zip",
+  "filename": "lk_ics2.zip",
   "render_readme": true
 }

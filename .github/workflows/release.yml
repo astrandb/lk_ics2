@@ -30,14 +30,14 @@ jobs:
       # Pack the template dir as a zip and upload to the release
       - name: ZIP Template Dir
         run: |
-          cd ${{ github.workspace }}/custom_components/hass_cc_template
-          zip hass_cc_template.zip -r ./
+          cd ${{ github.workspace }}/custom_components/lk_ics2
+          zip lk_ics2.zip -r ./
       - name: Upload zip to release
         uses: svenstaro/upload-release-action@2.11.5
 
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ${{ github.workspace }}/custom_components/hass_cc_template/hass_cc_template.zip
-          asset_name: hass_cc_template.zip
+          file: ${{ github.workspace }}/custom_components/lk_ics2/lk_ics2.zip
+          asset_name: lk_ics2.zip
           tag: ${{ github.ref }}
           overwrite: true

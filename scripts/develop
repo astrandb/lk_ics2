@@ -14,7 +14,7 @@ echo -n "
 logger:
   default: info
   logs:
-    custom_components.hass_cc_template: debug
+    custom_components.lk_ics2: debug
 
 isal:
 " >> config/configuration.yaml

@@ -1,5 +1,5 @@
 {
-  "name": "dev-hass_cc_template",
+  "name": "dev-lk_ics2",
   "image": "mcr.microsoft.com/devcontainers/python:3.14",
   "postCreateCommand": "scripts/setup",
   "appPort": ["9130:8123"],
