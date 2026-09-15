@@ -66,6 +66,12 @@
       "type": "shell",
       "command": "scripts/lint",
       "problemMatcher": []
+    },
+    {
+      "label": "Copy to target system for test",
+      "type": "shell",
+      "command": "rsync -av -e ssh --exclude=__pycache__ /workspaces/lk_ics2/custom_components/lk_ics2/* root@192.168.8.20:/homeassistant/custom_components/lk_ics2/",
+      "problemMatcher": []
     }
   ],
   "inputs": [
