@@ -11,22 +11,16 @@ from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 
 from .const import CONF_SERIAL_PORT, CONF_UNIT
+from .coordinator import SCAN_INTERVAL, LKICS2Coordinator
 
 _LOGGER = logging.getLogger(__name__)
-_PLATFORMS: list[Platform] = []
+_PLATFORMS: list[Platform] = [Platform.SENSOR]
 
-# TODO Create ConfigEntry type alias with API object
-# TODO Rename type alias and update all entry annotations
-type LKICS2ConfigEntry = ConfigEntry[MyApi]  # noqa: F821
+type LKICS2ConfigEntry = ConfigEntry[LKICS2Coordinator]
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: LKICS2ConfigEntry) -> bool:
     """Set up LK ICS.2 from a config entry."""
-
-    # TODO 1. Create API instance
-    # TODO 2. Validate the API connection (and authentication)
-    # TODO 3. Store an API object for your platforms to access
-    # entry.runtime_data = MyAPI(...)
 
     unit = async_get_unit(
         hass,
@@ -39,14 +33,19 @@ async def async_setup_entry(hass: HomeAssistant, entry: LKICS2ConfigEntry) -> bo
         entry.data[CONF_UNIT],
     )
 
-    # connection = ModbusConnection(
-    #     ModbusSerialParams(device=entry.data[CONF_SERIAL_PORT], baudrate=38400)
-    # )
-    controller = LKICS2Controller(unit)
-    # controller = LKICS2Controller(connection.for_unit(1))
-    # print("Updating controller...")
-    await controller.async_update()
-    _LOGGER.debug("Zone 1 temperature: %s", controller.zones[1].current_temperature)
+    device = LKICS2Controller(unit)
+    coordinator = LKICS2Coordinator(
+        hass, entry, device, device.async_update, SCAN_INTERVAL
+    )
+    await coordinator.async_config_entry_first_refresh()
+    entry.runtime_data = coordinator
+
+    _LOGGER.debug(
+        "Zone 1 temperature: %s", coordinator.device.zones[1].current_temperature
+    )
+    _LOGGER.debug(
+        "Zone 4 temperature: %s", coordinator.device.zones[4].current_temperature
+    )
 
     await hass.config_entries.async_forward_entry_setups(entry, _PLATFORMS)
 

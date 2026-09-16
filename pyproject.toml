@@ -1,3 +1,6 @@
+[project]
+requires-python = ">=3.12"
+
 [tool.bumpver]
 current_version = "2026.9.0"
 version_pattern = "YYYY.MM.PATCH[PYTAGNUM]"
@@ -274,7 +277,7 @@ enable = [
 ]
 
 [tool.ruff]
-required-version = ">=0.8.0"
+required-version = ">=0.16.0"
 
 [tool.ruff.lint]
 select = [
