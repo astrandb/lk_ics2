@@ -1,5 +1,7 @@
 """The LK ICS.2 integration."""
 
+import logging
+
 from modbus_connection import ModbusSerialParams
 
 from custom_components.lk_ics2.lk_modbus import LKICS2Controller
@@ -10,6 +12,7 @@ from homeassistant.core import HomeAssistant
 
 from .const import CONF_SERIAL_PORT, CONF_UNIT
 
+_LOGGER = logging.getLogger(__name__)
 _PLATFORMS: list[Platform] = []
 
 # TODO Create ConfigEntry type alias with API object
@@ -43,7 +46,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: LKICS2ConfigEntry) -> bo
     # controller = LKICS2Controller(connection.for_unit(1))
     # print("Updating controller...")
     await controller.async_update()
-    # print("Zone 1 temperature:", controller.zones[1].current_temperature)
+    _LOGGER.debug("Zone 1 temperature: %s", controller.zones[1].current_temperature)
 
     await hass.config_entries.async_forward_entry_setups(entry, _PLATFORMS)
 
