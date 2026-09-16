@@ -4,7 +4,6 @@ import logging
 
 from modbus_connection import ModbusSerialParams
 
-from custom_components.lk_ics2.lk_modbus import LKICS2Controller
 from homeassistant.components.modbus import async_get_unit
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
@@ -12,6 +11,7 @@ from homeassistant.core import HomeAssistant
 
 from .const import CONF_SERIAL_PORT, CONF_UNIT
 from .coordinator import SCAN_INTERVAL, LKICS2Coordinator
+from .lk_modbus import LKICS2Controller
 
 _LOGGER = logging.getLogger(__name__)
 _PLATFORMS: list[Platform] = [Platform.SENSOR]
