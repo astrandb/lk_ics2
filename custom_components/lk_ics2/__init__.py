@@ -14,7 +14,7 @@ from .coordinator import SCAN_INTERVAL, LKICS2Coordinator
 from .lk_modbus import LKICS2Controller
 
 _LOGGER = logging.getLogger(__name__)
-_PLATFORMS: list[Platform] = [Platform.SENSOR]
+_PLATFORMS: list[Platform] = [Platform.CLIMATE, Platform.SENSOR, Platform.SWITCH]
 
 type LKICS2ConfigEntry = ConfigEntry[LKICS2Coordinator]
 

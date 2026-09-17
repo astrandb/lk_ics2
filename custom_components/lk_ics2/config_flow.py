@@ -18,7 +18,6 @@ from .const import CONF_SERIAL_PORT, CONF_UNIT, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
-# TODO adjust the data schema to the data that you need
 STEP_USER_DATA_SCHEMA = vol.Schema(
     {
         vol.Required(CONF_SERIAL_PORT): SerialPortSelector(),
@@ -52,24 +51,7 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
 
     Data has the keys from STEP_USER_DATA_SCHEMA with values provided by the user.
     """
-    # TODO validate the data can be used to set up a connection.
-
-    # If your PyPI package is not built with async, pass your methods
-    # to the executor:
-    # await hass.async_add_executor_job(
-    #     your_validate_func, data[CONF_USERNAME], data[CONF_PASSWORD]
-    # )
-
     _ = PlaceholderHub(data[CONF_SERIAL_PORT])
-    # hub = PlaceholderHub(data[CONF_SERIAL_PORT])
-
-    # if not await hub.authenticate(data[CONF_USERNAME], data[CONF_PASSWORD]):
-    #     raise InvalidAuth
-
-    # If you cannot connect:
-    # throw CannotConnect
-    # If the authentication is wrong:
-    # InvalidAuth
 
     return {"title": "LK ICS.2 Controller"}
 

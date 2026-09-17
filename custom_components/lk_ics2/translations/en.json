@@ -40,47 +40,17 @@
     }
   },
   "entity": {
-    "fan": {
-      "fan": {
-        "name": "Fan"
-      }
-    },
-    "humidifier": {
-      "humidifier": {
-        "name": "Vaporizer"
-      }
-    },
-    "light": {
-      "light": {
-        "name": "Light"
-      }
-    },
-    "sensor": {
-      "heater_timer": {
-        "name": "Heater timer"
-      },
-      "preset_timer": {
-        "name": "Preset timer"
-      },
-      "foil_temp": {
-        "name": "Foil"
-      },
-      "heater_temp": {
-        "name": "Heater"
-      },
-      "bench_temp": {
-        "name": "Bench"
-      },
-      "humidity": {
-        "name": "Humidity"
+    "climate": {
+      "climate": {
+        "name": "Zone {index}"
       }
     },
     "switch": {
-      "heater": {
-        "name": "Heater"
+      "keylock": {
+        "name": "Keylock"
       },
-      "preset_timer": {
-        "name": "Preset timer"
+      "backlight": {
+        "name": "Backlight"
       }
     }
   }

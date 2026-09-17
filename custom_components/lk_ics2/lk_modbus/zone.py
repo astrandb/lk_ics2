@@ -35,6 +35,7 @@ class ZoneSettings(LKICS2Component):
         1011, stride=ZONE_STRIDE, signed=True, unit="°C", writable=True
     )
     backlight = coil(1002, stride=ZONE_STRIDE, writable=True)
+    keylock = coil(1003, stride=ZONE_STRIDE, writable=True)
 
 
 class Zone:
@@ -73,6 +74,11 @@ class Zone:
         return self.settings.backlight
 
     @property
+    def keylock(self) -> bool | None:
+        """Whether the thermostat keylock is enabled."""
+        return self.settings.keylock
+
+    @property
     def bypass_temperature(self) -> int | None:
         """Bypass setting / temperature for the zone."""
         return self.settings.bypass_temperature
@@ -84,6 +90,10 @@ class Zone:
     async def async_set_backlight(self, enabled: bool) -> None:
         """Set the display backlight state."""
         await self.settings.write("backlight", enabled)
+
+    async def async_set_keylock(self, enabled: bool) -> None:
+        """Set the thermostat keylock state."""
+        await self.settings.write("keylock", enabled)
 
     async def async_set_bypass_temperature(self, temperature: int) -> None:
         """Set the bypass temperature / setting."""

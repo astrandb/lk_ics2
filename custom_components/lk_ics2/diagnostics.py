@@ -20,6 +20,7 @@ async def async_get_config_entry_diagnostics(
     return async_redact_data(
         {
             "readings_components": device.zones,
+            "updated": entry.runtime_data.data.updated,
             "raw": raw,
         },
         TO_REDACT,
