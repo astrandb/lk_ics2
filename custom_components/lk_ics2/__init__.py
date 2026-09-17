@@ -1,33 +1,57 @@
 """The LK ICS.2 integration."""
 
+import logging
+
+from modbus_connection import ModbusSerialParams
+
+from homeassistant.components.modbus import async_get_unit
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 
-# TODO List the platforms that you want to support.
-# For your initial PR, limit it to 1 platform.
-_PLATFORMS: list[Platform] = [Platform.LIGHT]
+from .const import CONF_SERIAL_PORT, CONF_UNIT
+from .coordinator import SCAN_INTERVAL, LKICS2Coordinator
+from .lk_modbus import LKICS2Controller
 
-# TODO Create ConfigEntry type alias with API object
-# TODO Rename type alias and update all entry annotations
-type New_NameConfigEntry = ConfigEntry[MyApi]  # noqa: F821
+_LOGGER = logging.getLogger(__name__)
+_PLATFORMS: list[Platform] = [Platform.CLIMATE, Platform.SENSOR, Platform.SWITCH]
+
+type LKICS2ConfigEntry = ConfigEntry[LKICS2Coordinator]
 
 
-# TODO Update entry annotation
-async def async_setup_entry(hass: HomeAssistant, entry: New_NameConfigEntry) -> bool:
+async def async_setup_entry(hass: HomeAssistant, entry: LKICS2ConfigEntry) -> bool:
     """Set up LK ICS.2 from a config entry."""
 
-    # TODO 1. Create API instance
-    # TODO 2. Validate the API connection (and authentication)
-    # TODO 3. Store an API object for your platforms to access
-    # entry.runtime_data = MyAPI(...)
+    unit = async_get_unit(
+        hass,
+        entry,
+        ModbusSerialParams(
+            device=entry.data[CONF_SERIAL_PORT],
+            baudrate=38400,
+            framer="rtu",
+        ),
+        entry.data[CONF_UNIT],
+    )
+
+    device = LKICS2Controller(unit)
+    coordinator = LKICS2Coordinator(
+        hass, entry, device, device.async_update, SCAN_INTERVAL
+    )
+    await coordinator.async_config_entry_first_refresh()
+    entry.runtime_data = coordinator
+
+    _LOGGER.debug(
+        "Zone 1 temperature: %s", coordinator.device.zones[1].current_temperature
+    )
+    _LOGGER.debug(
+        "Zone 4 temperature: %s", coordinator.device.zones[4].current_temperature
+    )
 
     await hass.config_entries.async_forward_entry_setups(entry, _PLATFORMS)
 
     return True
 
 
-# TODO Update entry annotation
-async def async_unload_entry(hass: HomeAssistant, entry: New_NameConfigEntry) -> bool:
+async def async_unload_entry(hass: HomeAssistant, entry: LKICS2ConfigEntry) -> bool:
     """Unload a config entry."""
     return await hass.config_entries.async_unload_platforms(entry, _PLATFORMS)

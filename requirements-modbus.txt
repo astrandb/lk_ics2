@@ -1,0 +1,2 @@
+modbus_connection[tmodbus]
+pymodbus

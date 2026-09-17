@@ -1,0 +1,18 @@
+{
+  "entity": {
+    "switch": {
+      "backlight": {
+        "default": "mdi:lightbulb-on-outline",
+        "state": {
+          "off": "mdi:lightbulb-off-outline"
+        }
+      },
+      "keylock": {
+        "default": "mdi:lock-outline",
+        "state": {
+          "off": "mdi:lock-open-variant-outline"
+        }
+      }
+    }
+  }
+}

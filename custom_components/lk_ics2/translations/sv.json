@@ -1,0 +1,57 @@
+{
+  "config": {
+    "abort": {
+      "already_configured": "Enheten är redan konfigurerad",
+      "reconfigure_success": "Enheten har konfigurerats om framgångsrikt"
+    },
+    "error": {
+      "cannot_connect": "Misslyckades att ansluta, försök igen",
+      "invalid_auth": "Ogiltig autentisering",
+      "unknown": "Oväntat fel"
+    },
+    "step": {
+      "user": {
+        "data": {
+          "serial_port": "Serieport",
+          "unit": "Enhet"
+        },
+        "title": "Anslut till LK ICS.2-enheten",
+        "description": "Ange serieporten (RS485) som ansluter till LK ICS.2-kontrollern.",
+        "data_description": {
+          "serial_port": "Vid manuell konfiguration, använd länk från /dev/serial/by_id/ för ökad stabilitet."
+        }
+      },
+      "reconfigure": {
+        "data": {
+          "serial_port": "Serieport",
+          "unit": "Enhet"
+        },
+        "title": "Anslut till enheten",
+        "description": "Ange serieporten (RS485) som ansluter till LK ICS.2-kontrollern.",
+        "data_description": {
+          "serial_port": "Vid manuell konfiguration, använd länk från /dev/serial/by_id/ för ökad stabilitet."
+        }
+      }
+    }
+  },
+  "device": {
+    "zone": {
+      "name": "Zon {index}"
+    }
+  },
+  "entity": {
+    "climate": {
+      "climate": {
+        "name": "Zon {index}"
+      }
+    },
+    "switch": {
+      "keylock": {
+        "name": "Tangentlås"
+      },
+      "backlight": {
+        "name": "Bakgrundsbelysning"
+      }
+    }
+  }
+}

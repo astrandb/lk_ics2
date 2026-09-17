@@ -1,0 +1,57 @@
+{
+  "config": {
+    "abort": {
+      "already_configured": "Device is already configured",
+      "reconfigure_success": "Device reconfigured successfully"
+    },
+    "error": {
+      "cannot_connect": "Failed to connect, please try again",
+      "invalid_auth": "Invalid authentication",
+      "unknown": "Unexpected error"
+    },
+    "step": {
+      "user": {
+        "data": {
+          "serial_port": "Serial port",
+          "unit": "Unit"
+        },
+        "title": "Connect to the LK ICS.2device",
+        "description": "Enter the serial (RS485) port that connects to the LK ICS.2 controller.",
+        "data_description": {
+          "serial_port": "When using manual configuration, use link from /dev/serial/by_id/ for increased stability."
+        }
+      },
+      "reconfigure": {
+        "data": {
+          "serial_port": "Serial port",
+          "unit": "Unit"
+        },
+        "title": "Connect to the device",
+        "description": "Enter the serial (RS485) port that connects to the LK ICS.2 controller.",
+        "data_description": {
+          "serial_port": "When using manual configuration, use link from /dev/serial/by_id/ for increased stability."
+        }
+      }
+    }
+  },
+  "device": {
+    "zone": {
+      "name": "Zone {index}"
+    }
+  },
+  "entity": {
+    "climate": {
+      "climate": {
+        "name": "Zone {index}"
+      }
+    },
+    "switch": {
+      "keylock": {
+        "name": "Keylock"
+      },
+      "backlight": {
+        "name": "Backlight"
+      }
+    }
+  }
+}

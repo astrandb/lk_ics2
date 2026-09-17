@@ -4,9 +4,6 @@ set -e
 
 cd "$(dirname "$0")/.."
 
-sudo apt-get update
-sudo apt-get install -y --no-install-recommends \
-    libpcap-dev \
-    libturbojpeg0
-python3 -m pip install --requirement requirements-dev.txt
+python -m pip install --requirement requirements-dev.txt
+python -m pip install --requirement requirements-modbus.txt
 pre-commit install
