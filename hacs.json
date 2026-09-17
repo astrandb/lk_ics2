@@ -3,9 +3,9 @@
   "domains": [
     "climate",
     "sensor",
-    "binary_sensor"
+    "switch"
   ],
-  "homeassistant": "2021.12.0",
+  "homeassistant": "2026.9.0",
   "iot_class": [
     "Cloud Poll"
   ],
