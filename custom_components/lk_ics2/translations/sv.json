@@ -35,8 +35,8 @@
     }
   },
   "device": {
-    "sauna": {
-      "name": "Sauna"
+    "zone": {
+      "name": "Zon {index}"
     }
   },
   "entity": {
