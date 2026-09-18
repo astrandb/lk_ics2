@@ -13,23 +13,27 @@
       "user": {
         "data": {
           "serial_port": "Serieport",
-          "unit": "Enhet"
+          "unit": "Enhet",
+          "zone_count": "Antal zoner"
         },
         "title": "Anslut till LK ICS.2-enheten",
         "description": "Ange serieporten (RS485) som ansluter till LK ICS.2-kontrollern.",
         "data_description": {
-          "serial_port": "Vid manuell konfiguration, använd länk från /dev/serial/by_id/ för ökad stabilitet."
+          "serial_port": "Vid manuell konfiguration, använd länk från /dev/serial/by_id/ för ökad stabilitet.",
+          "zone_count": "Ange antal zoner som ska konfigureras"
         }
       },
       "reconfigure": {
         "data": {
           "serial_port": "Serieport",
-          "unit": "Enhet"
+          "unit": "Enhet",
+          "zone_count": "Antal zoner"
         },
         "title": "Anslut till enheten",
         "description": "Ange serieporten (RS485) som ansluter till LK ICS.2-kontrollern.",
         "data_description": {
-          "serial_port": "Vid manuell konfiguration, använd länk från /dev/serial/by_id/ för ökad stabilitet."
+          "serial_port": "Vid manuell konfiguration, använd länk från /dev/serial/by_id/ för ökad stabilitet.",
+          "zone_count": "Ange antal zoner som ska konfigureras"
         }
       }
     }

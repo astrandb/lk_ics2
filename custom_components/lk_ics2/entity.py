@@ -13,22 +13,30 @@ from .coordinator import LKICS2Coordinator
 class LKICS2Entity(CoordinatorEntity[LKICS2Coordinator]):
     """LK ICS.2 Entity class."""
 
-    # _attr_attribution = ATTRIBUTION
+    _attr_has_entity_name = True
 
     def __init__(
-        self, coordinator: LKICS2Coordinator, entity_description: EntityDescription
+        self,
+        coordinator: LKICS2Coordinator,
+        entity_description: EntityDescription,
+        idx: int,
     ) -> None:
         """Initialize."""
         super().__init__(coordinator)
         self.entity_description = entity_description
         if TYPE_CHECKING:
             assert coordinator.config_entry
-        self._attr_unique_id = coordinator.config_entry.entry_id
+        self._attr_unique_id = (
+            f"{coordinator.config_entry.entry_id}_{entity_description.key}"
+        )
         self._attr_device_info = DeviceInfo(
             identifiers={
                 (
                     DOMAIN,
-                    coordinator.config_entry.entry_id,
+                    f"{coordinator.config_entry.entry_id}_{idx}",
                 ),
             },
+            manufacturer="LK Systems",
+            model="ICS.2",
+            name=f"Zone {idx}",
         )
