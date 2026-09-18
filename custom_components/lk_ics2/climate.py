@@ -17,13 +17,13 @@ from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from .coordinator import LKICS2ConfigEntry, LKICS2Coordinator
 from .entity import LKICS2Entity
-from .lk_modbus import MAX_TEMP, MIN_TEMP, LKICS2Controller
+from .lk_modbus import MAX_TEMP, MAX_ZONES, MIN_TEMP, LKICS2Controller
 
 _LOGGER = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True, kw_only=True)
-class MyDeviceClimateDescription(ClimateEntityDescription):
+class LKICS2ClimateDescription(ClimateEntityDescription):
     """Describe a sensor backed by a device attribute."""
 
     value_fn: Callable[[LKICS2Controller], float | None]
@@ -31,10 +31,9 @@ class MyDeviceClimateDescription(ClimateEntityDescription):
     index: int | None = None
 
 
-ZONES = range(1, 7)
-ENTITIES: tuple[MyDeviceClimateDescription, ...] = (
+ENTITIES: tuple[LKICS2ClimateDescription, ...] = (
     *(
-        MyDeviceClimateDescription(
+        LKICS2ClimateDescription(
             key=f"climate_{idx}",
             translation_key="climate",
             translation_placeholders={"index": str(idx)},
@@ -42,7 +41,7 @@ ENTITIES: tuple[MyDeviceClimateDescription, ...] = (
             index=idx,
             value_fn=lambda device, idx=idx: device.zones[idx].current_temperature,
         )
-        for idx in ZONES
+        for idx in range(1, MAX_ZONES + 1)
     ),
 )
 
@@ -54,13 +53,17 @@ async def async_setup_entry(
 ) -> None:
     """Set up sensors for the LK ICS.2 integration."""
     coordinator = entry.runtime_data
-    async_add_entities(MyClimate(coordinator, description) for description in ENTITIES)
+    async_add_entities(
+        LKICS2Climate(coordinator, description)
+        for description in ENTITIES
+        if description.index in coordinator.device.zones
+    )
 
 
-class MyClimate(LKICS2Entity, ClimateEntity):
+class LKICS2Climate(LKICS2Entity, ClimateEntity):
     """Representation of a sensor for the LK ICS.2 integration."""
 
-    entity_description: MyDeviceClimateDescription
+    entity_description: LKICS2ClimateDescription
     _attr_precision = 0.1
     _attr_temperature_unit = UnitOfTemperature.CELSIUS
     _attr_target_temperature_step = 0.5
@@ -73,7 +76,7 @@ class MyClimate(LKICS2Entity, ClimateEntity):
     def __init__(
         self,
         coordinator: LKICS2Coordinator,
-        entity_description: MyDeviceClimateDescription,
+        entity_description: LKICS2ClimateDescription,
     ) -> None:
         """Initialize the entity."""
         if TYPE_CHECKING:

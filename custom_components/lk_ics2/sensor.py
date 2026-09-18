@@ -3,31 +3,26 @@
 from collections.abc import Callable
 from dataclasses import dataclass
 import logging
-from typing import override
+from typing import TYPE_CHECKING, override
 
 from homeassistant.components.sensor import (
     SensorDeviceClass,
     SensorEntity,
     SensorEntityDescription,
 )
-from homeassistant.const import (
-    TYPE_CHECKING,
-    EntityCategory,
-    UnitOfRatio,
-    UnitOfTemperature,
-)
+from homeassistant.const import EntityCategory, UnitOfRatio, UnitOfTemperature
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from .coordinator import LKICS2ConfigEntry, LKICS2Coordinator
 from .entity import LKICS2Entity
-from .lk_modbus import LKICS2Controller
+from .lk_modbus import MAX_ZONES, LKICS2Controller
 
 _LOGGER = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True, kw_only=True)
-class MyDeviceSensorDescription(SensorEntityDescription):
+class LKICS2SensorEntityDescription(SensorEntityDescription):
     """Describe a sensor backed by a device attribute."""
 
     value_fn: Callable[[LKICS2Controller], float | None]
@@ -35,10 +30,9 @@ class MyDeviceSensorDescription(SensorEntityDescription):
     index: int | None = None
 
 
-ZONES = range(1, 7)
-SENSORS: tuple[MyDeviceSensorDescription, ...] = (
+ENTITIES: tuple[LKICS2SensorEntityDescription, ...] = (
     *(
-        MyDeviceSensorDescription(
+        LKICS2SensorEntityDescription(
             key=f"temperature_{idx}",
             device_class=SensorDeviceClass.TEMPERATURE,
             native_unit_of_measurement=UnitOfTemperature.CELSIUS,
@@ -46,10 +40,10 @@ SENSORS: tuple[MyDeviceSensorDescription, ...] = (
             index=idx,
             value_fn=lambda device, idx=idx: device.zones[idx].current_temperature,
         )
-        for idx in ZONES
+        for idx in range(1, MAX_ZONES + 1)
     ),
     *(
-        MyDeviceSensorDescription(
+        LKICS2SensorEntityDescription(
             key=f"battery_{idx}",
             device_class=SensorDeviceClass.BATTERY,
             native_unit_of_measurement=UnitOfRatio.PERCENTAGE,
@@ -59,7 +53,7 @@ SENSORS: tuple[MyDeviceSensorDescription, ...] = (
             index=idx,
             value_fn=lambda device, idx=idx: device.zones[idx].battery_level,
         )
-        for idx in ZONES
+        for idx in range(1, MAX_ZONES + 1)
     ),
 )
 
@@ -71,22 +65,25 @@ async def async_setup_entry(
 ) -> None:
     """Set up sensors for the LK ICS.2 integration."""
     coordinator = entry.runtime_data
-    async_add_entities(MySensor(coordinator, description) for description in SENSORS)
+    async_add_entities(
+        LKICS2Sensor(coordinator, description)
+        for description in ENTITIES
+        if description.index in coordinator.device.zones
+    )
 
 
-class MySensor(LKICS2Entity, SensorEntity):
+class LKICS2Sensor(LKICS2Entity, SensorEntity):
     """Representation of a sensor for the LK ICS.2 integration."""
 
-    entity_description: MyDeviceSensorDescription
+    entity_description: LKICS2SensorEntityDescription
 
     def __init__(
         self,
         coordinator: LKICS2Coordinator,
-        entity_description: MyDeviceSensorDescription,
+        entity_description: LKICS2SensorEntityDescription,
     ) -> None:
         """Initialize the entity."""
         if TYPE_CHECKING:
-            assert entity_description
             assert entity_description.index is not None
         super().__init__(coordinator, entity_description, entity_description.index)
         self.entity_description = entity_description
