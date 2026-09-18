@@ -5,3 +5,4 @@ VERSION = "2026.9.0"
 
 CONF_SERIAL_PORT = "serial_port"
 CONF_UNIT = "unit"
+CONF_ZONE_COUNT = "zone_count"

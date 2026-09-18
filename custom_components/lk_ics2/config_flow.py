@@ -14,7 +14,8 @@ from homeassistant.helpers.selector import (
     SerialPortSelector,
 )
 
-from .const import CONF_SERIAL_PORT, CONF_UNIT, DOMAIN
+from .const import CONF_SERIAL_PORT, CONF_UNIT, CONF_ZONE_COUNT, DOMAIN
+from .lk_modbus.const import DEFAULT_ZONE_COUNT, MAX_ZONES
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -24,6 +25,12 @@ STEP_USER_DATA_SCHEMA = vol.Schema(
         vol.Required(CONF_UNIT, default=1): vol.All(
             NumberSelector(
                 NumberSelectorConfig(min=1, max=247, mode=NumberSelectorMode.BOX)
+            ),
+            vol.Coerce(int),
+        ),
+        vol.Required(CONF_ZONE_COUNT, default=DEFAULT_ZONE_COUNT): vol.All(
+            NumberSelector(
+                NumberSelectorConfig(min=1, max=MAX_ZONES, mode=NumberSelectorMode.BOX)
             ),
             vol.Coerce(int),
         ),
@@ -76,6 +83,9 @@ class LKICS2ConfigFlow(ConfigFlow, domain=DOMAIN):
             except Exception:  # pylint: disable=broad-except # noqa: BLE001
                 errors["base"] = "unknown"
             else:
+                unique_id = f"{user_input[CONF_SERIAL_PORT]}_{user_input[CONF_UNIT]}"
+                await self.async_set_unique_id(unique_id)
+                self._abort_if_unique_id_configured()
                 return self.async_create_entry(title=info["title"], data=user_input)
 
         return self.async_show_form(

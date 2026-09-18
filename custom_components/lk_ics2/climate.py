@@ -13,12 +13,10 @@ from homeassistant.components.climate.const import (
 )
 from homeassistant.const import UnitOfTemperature
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
-from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .const import DOMAIN
 from .coordinator import LKICS2ConfigEntry, LKICS2Coordinator
+from .entity import LKICS2Entity
 from .lk_modbus import MAX_TEMP, MIN_TEMP, LKICS2Controller
 
 _LOGGER = logging.getLogger(__name__)
@@ -33,6 +31,7 @@ class MyDeviceClimateDescription(ClimateEntityDescription):
     index: int | None = None
 
 
+ZONES = range(1, 7)
 ENTITIES: tuple[MyDeviceClimateDescription, ...] = (
     *(
         MyDeviceClimateDescription(
@@ -43,7 +42,7 @@ ENTITIES: tuple[MyDeviceClimateDescription, ...] = (
             index=idx,
             value_fn=lambda device, idx=idx: device.zones[idx].current_temperature,
         )
-        for idx in range(1, 9)
+        for idx in ZONES
     ),
 )
 
@@ -58,11 +57,10 @@ async def async_setup_entry(
     async_add_entities(MyClimate(coordinator, description) for description in ENTITIES)
 
 
-class MyClimate(CoordinatorEntity[LKICS2Coordinator], ClimateEntity):
+class MyClimate(LKICS2Entity, ClimateEntity):
     """Representation of a sensor for the LK ICS.2 integration."""
 
     entity_description: MyDeviceClimateDescription
-    _attr_has_entity_name = True
     _attr_precision = 0.1
     _attr_temperature_unit = UnitOfTemperature.CELSIUS
     _attr_target_temperature_step = 0.5
@@ -74,25 +72,15 @@ class MyClimate(CoordinatorEntity[LKICS2Coordinator], ClimateEntity):
 
     def __init__(
         self,
-        runtime_data: LKICS2Coordinator,
+        coordinator: LKICS2Coordinator,
         entity_description: MyDeviceClimateDescription,
     ) -> None:
         """Initialize the entity."""
-        super().__init__(runtime_data)
+        if TYPE_CHECKING:
+            assert entity_description.index is not None
+        super().__init__(coordinator, entity_description, entity_description.index)
         self.entity_description = entity_description
-        self.coordinator = runtime_data
-        self._attr_unique_id = f"{DOMAIN}_{self.entity_description.key}"
-        self._attr_device_info = DeviceInfo(
-            identifiers={
-                (
-                    DOMAIN,
-                    f"ABC123_{self.entity_description.index}",
-                ),
-            },
-            manufacturer="LK Systems",
-            model="ICS.2",
-            name=f"Zone {self.entity_description.index}",
-        )
+        self.coordinator = coordinator
 
     @property
     @override

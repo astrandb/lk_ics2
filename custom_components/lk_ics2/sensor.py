@@ -10,14 +10,17 @@ from homeassistant.components.sensor import (
     SensorEntity,
     SensorEntityDescription,
 )
-from homeassistant.const import EntityCategory, UnitOfRatio, UnitOfTemperature
+from homeassistant.const import (
+    TYPE_CHECKING,
+    EntityCategory,
+    UnitOfRatio,
+    UnitOfTemperature,
+)
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
-from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .const import DOMAIN
 from .coordinator import LKICS2ConfigEntry, LKICS2Coordinator
+from .entity import LKICS2Entity
 from .lk_modbus import LKICS2Controller
 
 _LOGGER = logging.getLogger(__name__)
@@ -32,6 +35,7 @@ class MyDeviceSensorDescription(SensorEntityDescription):
     index: int | None = None
 
 
+ZONES = range(1, 7)
 SENSORS: tuple[MyDeviceSensorDescription, ...] = (
     *(
         MyDeviceSensorDescription(
@@ -42,7 +46,7 @@ SENSORS: tuple[MyDeviceSensorDescription, ...] = (
             index=idx,
             value_fn=lambda device, idx=idx: device.zones[idx].current_temperature,
         )
-        for idx in range(1, 9)
+        for idx in ZONES
     ),
     *(
         MyDeviceSensorDescription(
@@ -55,7 +59,7 @@ SENSORS: tuple[MyDeviceSensorDescription, ...] = (
             index=idx,
             value_fn=lambda device, idx=idx: device.zones[idx].battery_level,
         )
-        for idx in range(1, 9)
+        for idx in ZONES
     ),
 )
 
@@ -70,33 +74,23 @@ async def async_setup_entry(
     async_add_entities(MySensor(coordinator, description) for description in SENSORS)
 
 
-class MySensor(CoordinatorEntity[LKICS2Coordinator], SensorEntity):
+class MySensor(LKICS2Entity, SensorEntity):
     """Representation of a sensor for the LK ICS.2 integration."""
 
     entity_description: MyDeviceSensorDescription
-    _attr_has_entity_name = True
 
     def __init__(
         self,
-        runtime_data: LKICS2Coordinator,
+        coordinator: LKICS2Coordinator,
         entity_description: MyDeviceSensorDescription,
     ) -> None:
         """Initialize the entity."""
-        super().__init__(runtime_data)
+        if TYPE_CHECKING:
+            assert entity_description
+            assert entity_description.index is not None
+        super().__init__(coordinator, entity_description, entity_description.index)
         self.entity_description = entity_description
-        self.coordinator = runtime_data
-        self._attr_unique_id = f"{DOMAIN}_{self.entity_description.key}"
-        self._attr_device_info = DeviceInfo(
-            identifiers={
-                (
-                    DOMAIN,
-                    f"ABC123_{self.entity_description.index}",
-                ),
-            },
-            manufacturer="LK Systems",
-            model="ICS.2",
-            name=f"Zone {self.entity_description.index}",
-        )
+        self.coordinator = coordinator
 
     @property
     @override

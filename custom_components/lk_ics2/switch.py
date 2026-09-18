@@ -8,12 +8,10 @@ from typing import override
 from homeassistant.components.switch import SwitchEntity, SwitchEntityDescription
 from homeassistant.const import TYPE_CHECKING, EntityCategory
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
-from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .const import DOMAIN
 from .coordinator import LKICS2ConfigEntry, LKICS2Coordinator
+from .entity import LKICS2Entity
 from .lk_modbus import LKICS2Controller
 
 _LOGGER = logging.getLogger(__name__)
@@ -29,7 +27,8 @@ class MyDeviceSwitchDescription(SwitchEntityDescription):
     index: int | None = None
 
 
-SENSORS: tuple[MyDeviceSwitchDescription, ...] = (
+ZONES = range(1, 7)
+ENTITIES: tuple[MyDeviceSwitchDescription, ...] = (
     *(
         MyDeviceSwitchDescription(
             key=f"keylock_{idx}",
@@ -42,7 +41,7 @@ SENSORS: tuple[MyDeviceSwitchDescription, ...] = (
                 idx
             ].async_set_keylock(new_state),
         )
-        for idx in range(1, 9)
+        for idx in ZONES
     ),
     *(
         MyDeviceSwitchDescription(
@@ -56,7 +55,7 @@ SENSORS: tuple[MyDeviceSwitchDescription, ...] = (
                 idx
             ].async_set_backlight(new_state),
         )
-        for idx in range(1, 9)
+        for idx in ZONES
     ),
 )
 
@@ -68,10 +67,10 @@ async def async_setup_entry(
 ) -> None:
     """Set up sensors for the LK ICS.2 integration."""
     coordinator = entry.runtime_data
-    async_add_entities(MySwitch(coordinator, description) for description in SENSORS)
+    async_add_entities(MySwitch(coordinator, description) for description in ENTITIES)
 
 
-class MySwitch(CoordinatorEntity[LKICS2Coordinator], SwitchEntity):
+class MySwitch(LKICS2Entity, SwitchEntity):
     """Representation of a switch for the LK ICS.2 integration."""
 
     entity_description: MyDeviceSwitchDescription
@@ -79,25 +78,15 @@ class MySwitch(CoordinatorEntity[LKICS2Coordinator], SwitchEntity):
 
     def __init__(
         self,
-        runtime_data: LKICS2Coordinator,
+        coordinator: LKICS2Coordinator,
         entity_description: MyDeviceSwitchDescription,
     ) -> None:
         """Initialize the entity."""
-        super().__init__(runtime_data)
+        if TYPE_CHECKING:
+            assert entity_description.index is not None
+        super().__init__(coordinator, entity_description, entity_description.index)
         self.entity_description = entity_description
-        self.coordinator = runtime_data
-        self._attr_unique_id = f"{DOMAIN}_{self.entity_description.key}"
-        self._attr_device_info = DeviceInfo(
-            identifiers={
-                (
-                    DOMAIN,
-                    f"ABC123_{self.entity_description.index}",
-                ),
-            },
-            manufacturer="LK Systems",
-            model="ICS.2",
-            name=f"Zone {self.entity_description.index}",
-        )
+        self.coordinator = coordinator
 
     @property
     @override

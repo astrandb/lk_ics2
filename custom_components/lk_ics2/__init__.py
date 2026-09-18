@@ -9,9 +9,9 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 
-from .const import CONF_SERIAL_PORT, CONF_UNIT
+from .const import CONF_SERIAL_PORT, CONF_UNIT, CONF_ZONE_COUNT
 from .coordinator import SCAN_INTERVAL, LKICS2Coordinator
-from .lk_modbus import LKICS2Controller
+from .lk_modbus import DEFAULT_ZONE_COUNT, LKICS2Controller
 
 _LOGGER = logging.getLogger(__name__)
 _PLATFORMS: list[Platform] = [Platform.CLIMATE, Platform.SENSOR, Platform.SWITCH]
@@ -33,19 +33,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: LKICS2ConfigEntry) -> bo
         entry.data[CONF_UNIT],
     )
 
-    device = LKICS2Controller(unit)
+    device = LKICS2Controller(
+        unit, zone_count=entry.data.get(CONF_ZONE_COUNT, DEFAULT_ZONE_COUNT)
+    )
     coordinator = LKICS2Coordinator(
         hass, entry, device, device.async_update, SCAN_INTERVAL
     )
     await coordinator.async_config_entry_first_refresh()
     entry.runtime_data = coordinator
-
-    _LOGGER.debug(
-        "Zone 1 temperature: %s", coordinator.device.zones[1].current_temperature
-    )
-    _LOGGER.debug(
-        "Zone 4 temperature: %s", coordinator.device.zones[4].current_temperature
-    )
 
     await hass.config_entries.async_forward_entry_setups(entry, _PLATFORMS)
 
