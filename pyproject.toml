@@ -2,7 +2,7 @@
 requires-python = ">=3.12"
 
 [tool.bumpver]
-current_version = "2026.9.2"
+current_version = "2026.9.3"
 version_pattern = "YYYY.MM.PATCH[PYTAGNUM]"
 commit_message = "Bump version from {old_version} to {new_version}"
 commit = false

@@ -35,8 +35,7 @@ ENTITIES: tuple[LKICS2ClimateDescription, ...] = (
     *(
         LKICS2ClimateDescription(
             key=f"climate_{idx}",
-            translation_key="climate",
-            translation_placeholders={"index": str(idx)},
+            name=None,
             report_name=f"zone_{idx}.readings",
             index=idx,
             value_fn=lambda device, idx=idx: device.zones[idx].current_temperature,
