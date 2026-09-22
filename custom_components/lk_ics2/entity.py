@@ -38,5 +38,6 @@ class LKICS2Entity(CoordinatorEntity[LKICS2Coordinator]):
             },
             manufacturer="LK Systems",
             model="ICS.2",
-            name=f"Zone {idx}",
+            translation_key="zone",
+            translation_placeholders={"index": str(idx)},
         )
