@@ -2,11 +2,7 @@
 
 # LK ICS.2 Integration for Home Assistant
 
-_Work in progress_
-
-Known limitations: There is only limited error and exception handling in this pre-release.
-
-This integration will represent .......
+This integration exposes LK ICS.2 foor heating controller as a number of climate entities in HA. It uses the modern Modbus integration methods and should work with most USB-to-RS422/485 adapters.
 
 ## Installation
 
