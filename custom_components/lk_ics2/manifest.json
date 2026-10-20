@@ -1,6 +1,7 @@
 {
   "domain": "lk_ics2",
   "name": "LK ICS.2",
+  "categories": ["climate.thermostats_heating"],
   "codeowners": ["@astrandb"],
   "config_flow": true,
   "dependencies": ["modbus", "usb"],
@@ -12,6 +13,6 @@
   "quality_scale": "bronze",
   "requirements": [],
   "ssdp": [],
-  "version": "2026.9.3",
+  "version": "2026.10.0",
   "zeroconf": []
 }
