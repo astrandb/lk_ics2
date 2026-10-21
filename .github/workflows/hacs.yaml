@@ -1,4 +1,4 @@
-name: Validate
+name: Validate for Marketplace / HACS
 
 on:
   push:
