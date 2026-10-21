@@ -1,14 +1,14 @@
 [![LK ICS.2](https://img.shields.io/github/v/release/astrandb/lk_ics2)](https://github.com/astrandb/lk_ics2/releases/latest) [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/hacs/integration) ![Validate with hassfest](https://github.com/astrandb/lk_ics2/workflows/Validate%20with%20hassfest/badge.svg) ![Maintenance](https://img.shields.io/maintenance/yes/2026.svg) [![LK ICS.2_downloads](https://img.shields.io/github/downloads/astrandb/lk_ics2/total)](https://github.com/astrandb/lk_ics2)
 
-# LK ICS.2 Integration for Home Assistant
+# LK Underfloor heating ICS.2 - Integration for Home Assistant
 
-This integration exposes LK ICS.2 foor heating controller as a number of climate entities in HA. It uses the modern Modbus integration methods and should work with most USB-to-RS422/485 adapters.
+This integration exposes LK ICS.2 underfloor heating controller as a number of climate entities in HA. It uses the modern Modbus integration methods and should work with most USB-to-RS422/485 adapters.
 
 ## Installation
 
 ### Preferred download method
 
-- Use HACS, add this repo as a custom repository and install LK ICS.2 integration.
+- Use Marketplace (HACS), add this repo as a custom repository and install "LK Underfloor heating ICS.2" integration.
 - Restart Home Assistant
 
 ### Manual download method
@@ -18,7 +18,7 @@ This integration exposes LK ICS.2 foor heating controller as a number of climate
 
 ### Setup
 
-Goto Integrations->Add and select LK ICS.2
+Goto Integrations->Add and select "LK Underfloor heating ICS.2"
 
 Follow instructions to setup the integration.
 
