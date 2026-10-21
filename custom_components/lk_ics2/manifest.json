@@ -1,6 +1,6 @@
 {
   "domain": "lk_ics2",
-  "name": "LK ICS.2",
+  "name": "LK Underfloor heating ICS.2",
   "categories": ["climate.thermostats_heating"],
   "codeowners": ["@astrandb"],
   "config_flow": true,
@@ -9,10 +9,11 @@
   "homekit": {},
   "integration_type": "hub",
   "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/astrandb/lk_ics2/issues",
   "loggers": ["lk_modbus", "modbus_connection", "tmodbus"],
   "quality_scale": "bronze",
   "requirements": [],
   "ssdp": [],
-  "version": "2026.10.0",
+  "version": "2026.10.1",
   "zeroconf": []
 }
