@@ -64,7 +64,7 @@ class LKICS2Climate(LKICS2Entity, ClimateEntity):
 
     entity_description: LKICS2ClimateDescription
     _attr_precision = 0.1
-    _attr_temperature_unit = UnitOfTemperature.CELSIUS
+    _attr_native_temperature_unit = UnitOfTemperature.CELSIUS
     _attr_target_temperature_step = 0.5
     _attr_supported_features = ClimateEntityFeature.TARGET_TEMPERATURE
     _attr_hvac_modes = [HVACMode.HEAT]
@@ -95,7 +95,7 @@ class LKICS2Climate(LKICS2Entity, ClimateEntity):
 
     @property
     @override
-    def current_temperature(self) -> float | None:
+    def native_current_temperature(self) -> float | None:
         """Return the current temperature."""
         if TYPE_CHECKING:
             assert self.entity_description.index
@@ -105,7 +105,7 @@ class LKICS2Climate(LKICS2Entity, ClimateEntity):
 
     @property
     @override
-    def target_temperature(self) -> float | None:
+    def native_target_temperature(self) -> float | None:
         """Return the target temperature."""
 
         if TYPE_CHECKING:
